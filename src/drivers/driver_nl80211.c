@@ -4877,8 +4877,11 @@ static int wpa_driver_nl80211_associate(
 	if (params->mode == IEEE80211_MODE_AP)
 		return wpa_driver_nl80211_ap(drv, params);
 
-	if (params->mode == IEEE80211_MODE_IBSS)
+	if (params->mode == IEEE80211_MODE_IBSS) {
+		if (wpa_driver_nl80211_set_mode(priv, NL80211_IFTYPE_ADHOC) < 0)
+			return -1;
 		return wpa_driver_nl80211_ibss(drv, params);
+	}
 
 	if (!(drv->capa.flags & WPA_DRIVER_FLAGS_SME)) {
 		if (wpa_driver_nl80211_set_mode(priv, params->mode) < 0)
